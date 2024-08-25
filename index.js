@@ -209,8 +209,8 @@ async function deleteUserByReferenceId(referenceId) {
     }
 }
 
-// Exemplo de uso
-(async () => {
+// Adicionando event listeners aos botões
+document.getElementById('registerDeveloperBtn').addEventListener('click', async () => {
     try {
         const developerData = {
             name: 'Seu Nome',
@@ -223,12 +223,198 @@ async function deleteUserByReferenceId(referenceId) {
             app_desc: 'Descrição do aplicativo',
             corporation_address: 'Rua teste, Nº 15, Bairro teste, Cidade-SP'
         };
-
         const developerId = await registerDeveloper(developerData);
-        const token = await generateToken(developerId);
-        const data = await getData('https://registration.themembers.dev.br/api/some-endpoint');
-        console.log(data);
+        console.log('Developer ID:', developerId);
     } catch (error) {
         console.error(error);
     }
-})();
+});
+
+document.getElementById('generateTokenBtn').addEventListener('click', async () => {
+    try {
+        const developerId = localStorage.getItem('developerId');
+        const token = await generateToken(developerId);
+        console.log('Token:', token);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('getUserByIdBtn').addEventListener('click', async () => {
+    try {
+        const userId = prompt('Digite o ID do usuário:');
+        const user = await getUserById(userId);
+        console.log('Usuário:', user);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('getUserByDocumentBtn').addEventListener('click', async () => {
+    try {
+        const document = prompt('Digite o documento do usuário:');
+        const user = await getUserByDocument(document);
+        console.log('Usuário:', user);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('getUserByEmailBtn').addEventListener('click', async () => {
+    try {
+        const email = prompt('Digite o e-mail do usuário:');
+        const user = await getUserByEmail(email);
+        console.log('Usuário:', user);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('getUserByReferenceIdBtn').addEventListener('click', async () => {
+    try {
+        const referenceId = prompt('Digite o ID de referência do usuário:');
+        const user = await getUserByReferenceId(referenceId);
+        console.log('Usuário:', user);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('createUsersBtn').addEventListener('click', async () => {
+    try {
+        const usersData = [
+            {
+                name: 'Usuário 1',
+                document: '123.456.789-00',
+                email: 'usuario1@email.com',
+                phone: '(00) 00000-0000'
+            },
+            {
+                name: 'Usuário 2',
+                document: '987.654.321-00',
+                email: 'usuario2@email.com',
+                phone: '(00) 00000-0000'
+            }
+        ];
+        const result = await createUsers(usersData);
+        console.log('Resultado:', result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+// Função para excluir usuário por ID
+async function deleteUserById(userId) {
+    const token = localStorage.getItem('developerToken');
+    const platformToken = 'token_da_plataforma'; // Substitua pelo token da plataforma
+
+    const response = await fetch(`https://registration.themembers.dev.br/api/users/destroy-user-id/${userId}/${token}/${platformToken}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw new Error('Erro ao excluir usuário por ID');
+    }
+}
+
+// Função para excluir usuário por documento
+async function deleteUserByDocument(document) {
+    const token = localStorage.getItem('developerToken');
+    const platformToken = 'token_da_plataforma'; // Substitua pelo token da plataforma
+
+    const response = await fetch(`https://registration.themembers.dev.br/api/users/destroy-document/${document}/${token}/${platformToken}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw new Error('Erro ao excluir usuário por documento');
+    }
+}
+
+// Função para excluir usuário por e-mail
+async function deleteUserByEmail(email) {
+    const token = localStorage.getItem('developerToken');
+    const platformToken = 'token_da_plataforma'; // Substitua pelo token da plataforma
+
+    const response = await fetch(`https://registration.themembers.dev.br/api/users/destroy-email/${email}/${token}/${platformToken}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw new Error('Erro ao excluir usuário por e-mail');
+    }
+}
+
+// Função para excluir usuário por ID de referência
+async function deleteUserByReferenceId(referenceId) {
+    const token = localStorage.getItem('developerToken');
+    const platformToken = 'token_da_plataforma'; // Substitua pelo token da plataforma
+
+    const response = await fetch(`https://registration.themembers.dev.br/api/users/destroy-reference-id/${referenceId}/${token}/${platformToken}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw new Error('Erro ao excluir usuário por ID de referência');
+    }
+}
+
+// Adicionando event listeners aos botões
+document.getElementById('deleteUserByIdBtn').addEventListener('click', async () => {
+    try {
+        const userId = prompt('Digite o ID do usuário:');
+        const result = await deleteUserById(userId);
+        console.log('Resultado:', result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('deleteUserByDocumentBtn').addEventListener('click', async () => {
+    try {
+        const document = prompt('Digite o documento do usuário:');
+        const result = await deleteUserByDocument(document);
+        console.log('Resultado:', result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('deleteUserByEmailBtn').addEventListener('click', async () => {
+    try {
+        const email = prompt('Digite o e-mail do usuário:');
+        const result = await deleteUserByEmail(email);
+        console.log('Resultado:', result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+document.getElementById('deleteUserByReferenceIdBtn').addEventListener('click', async () => {
+    try {
+        const referenceId = prompt('Digite o ID de referência do usuário:');
+        const result = await deleteUserByReferenceId(referenceId);
+        console.log('Resultado:', result);
+    } catch (error) {
+        console.error(error);
+    }
+});
