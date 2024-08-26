@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test URL Parameters</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div>
@@ -12,73 +11,36 @@
         <p>Name: <span id="username"></span></p>
     </div>
 
-    <iframe id="customIframe" width="100%" height="300px"></iframe>
-
     <script>
-        function getAllLocalStorageData() {
-            let localStorageData = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                let value = localStorage.getItem(key);
-                localStorageData[key] = value;
-            }
-            console.log('Dados do localStorage:', localStorageData); // Exibe todos os dados do localStorage
-            return localStorageData;
+        // Função para obter os parâmetros da URL
+        function getURLParameters() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            // Extrair os parâmetros 'id' e 'name'
+            const id = urlParams.get('id');
+            const name = urlParams.get('name');
+
+            return { id, name };
         }
 
-        async function generateDeveloperToken(userId) {
-            const response = await fetch('https://api.themembers.dev.br/api/generate-token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_id: userId
-                })
-            });
+        // Função para usar os parâmetros
+        function useParameters() {
+            const { id, name } = getURLParameters();
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Token gerado:', data.token);
-                return data.token; // Retorna o token gerado
-            } else {
-                console.error('Erro ao gerar token:', response.statusText);
-                return null;
-            }
+            // Exibindo os parâmetros no console
+            console.log('ID:', id);
+            console.log('name:', name);
+
+            // Exemplo: Definir valores em elementos da página
+            document.getElementById('userId').textContent = id;
+            document.getElementById('username').textContent = name;
+
+            // Você pode usar esses valores para outras operações, como fazer chamadas API, etc.
         }
 
-        async function setIframeSrc() {
-            // Recupere os dados do localStorage
-            const localStorageData = getAllLocalStorageData();
-            
-            // Exemplo de como você pode extrair dados específicos do localStorage
-            const name = JSON.parse(localStorageData['@/atom.themembers.com.br/custom']).tenant.name;
-            const id = JSON.parse(localStorageData['@/atom.themembers.com.br/custom']).tenant.subscription.user_id;
-            
-            // Log dos valores extraídos
-            console.log('ID extraído:', id);
-            console.log('name extraído:', name);
-            
-            // Gerar o token do desenvolvedor
-            const token = await generateDeveloperToken(id);
-            if (token) {
-                // Salve o token no localStorage ou use conforme necessário
-                localStorage.setItem('developerToken', token);
-                console.log('Token salvo no localStorage:', token);
-
-                // Construindo a URL com os parâmetros id e name
-                const iframeUrl = `https://themembers.vercel.app?id=${id}&name=${name}`;
-                
-                // Log da URL final do iframe
-                console.log('URL do iframe:', iframeUrl);
-                
-                // Configura o src do iframe com a URL construída
-                document.getElementById('customIframe').src = iframeUrl;
-            }
-        }
-
-        // Chame a função para configurar o iframe ao carregar a página
-        document.addEventListener('DOMContentLoaded', setIframeSrc);
+        // Chame a função ao carregar a página
+        document.addEventListener('DOMContentLoaded', useParameters);
     </script>
 </body>
 </html>
