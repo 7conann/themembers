@@ -3,10 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iframe</title>
+    <title>Test URL Parameters</title>
 </head>
 <body>
-    <button id="getDataBtn">Obter Dados do LocalStorage</button>
-    <script src="iframe-script.js"></script>
+    <div>
+        <p>ID: <span id="userId"></span></p>
+        <p>Name: <span id="username"></span></p>
+    </div>
+
+    <script>
+        // Função para obter os parâmetros da URL
+        function getURLParameters() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            // Extrair os parâmetros 'id' e 'name'
+            const id = urlParams.get('id');
+            const name = urlParams.get('name');
+
+            return { id, name };
+        }
+
+        // Função para usar os parâmetros
+        function useParameters() {
+            const { id, name } = getURLParameters();
+
+            // Exibindo os parâmetros no console
+            console.log('ID:', id);
+            console.log('name:', name);
+
+            // Exemplo: Definir valores em elementos da página
+            document.getElementById('userId').textContent = id;
+            document.getElementById('username').textContent = name;
+
+            // Você pode usar esses valores para outras operações, como fazer chamadas API, etc.
+        }
+
+        // Chame a função ao carregar a página
+        document.addEventListener('DOMContentLoaded', useParameters);
+    </script>
 </body>
 </html>
